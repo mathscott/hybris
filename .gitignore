@@ -1,0 +1,193 @@
+hybris/config/*
+hybris/data/
+hybris/log/
+hybris/roles/
+hybris/temp/
+hybris/bin/ext-*
+hybris/bin/platform/
+.log
+*.log
+.class
+*.class
+gensrc/
+hybris/bin/custom/suzano/suzanocronjob/.project
+build-tools/
+c4c-integration/
+hybris-Mobile-Apps-SDK/
+hybris-ems/
+hybris-sbg/
+licenses/
+idea-module-files/
+README
+
+
+#####################
+#License
+####################
+
+hybris/config/licence/*
+hybris/config/licence/CPS.txt
+hybris/config/licence/installedSaplicenses.properties
+hybris/config/local.properties
+hybris/config/localextensions.xml
+hybris/config/backup/
+
+
+# Directories #
+/build/
+target/
+ 
+# OS Files #
+.DS_Store
+.idea
+*.idea
+.classpath
+hybris/idea-module-files/*
+hybris/idea-module-files/
+ 
+*.class
+ 
+# Package Files #
+*.war
+*.ear
+*.db
+ 
+ 
+######################
+# Windows
+######################
+ 
+# Windows image file caches
+Thumbs.db 
+ 
+# Folder config file
+Desktop.ini
+ 
+ 
+######################
+# OSX
+######################
+ 
+.DS_Store
+.svn
+ 
+# Thumbnails
+._*
+ 
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+######################
+# Linux
+######################
+ 
+ 
+######################
+# Eclipse
+######################
+*.project
+*.pydevproject
+.metadata
+tmp/**
+tmp/**/*
+**/eclipsebin/**
+*.tmp
+*.bak
+*.swp
+*~.nib
+.settings/
+**/.settings/*
+.loadpath
+/src/main/resources/rebel.xml
+.lastupdate
+*/lib/*
+
+# External tool builders
+.externalToolBuilders/
+ 
+# Locally stored "Eclipse launch configurations"
+*.launch
+ 
+# CDT-specific
+.cproject
+ 
+# PDT-specific
+.buildpath
+
+# Ignoring .svn folder
+.svn/*
+
+# Git files created by Eclipse
+**/.gitginore
+
+*JRebel
+*rebel.xml
+ 
+ 
+######################
+# Hybris 
+######################
+
+# Files
+build.xml
+*hmc.jar
+extensioninfo.xsd
+hmc.xsd
+platformhome.properties
+items.xsd
+beans.xsd
+**/*-testclasses.xml
+**/*-webtestclasses.xml
+.pmd
+.spring[Bb]eans
+
+# Folders
+# Folders - Hybris Specific
+hybris/data/
+hybris/log/
+hybris/temp/
+.metadata/
+hybris/bin/ext-*/
+hybris/bin/platform/
+**/RemoteSystemsTempFiles/
+**/.externalToolBuilders/
+
+# Folders - Automagically Generated
+**/classes/
+**/gensrc/
+**/hmc/bin/
+**/hmc/classes
+**/web/addonsrc/
+**/web/commonwebsrc/
+**/web/testclasses/
+**/web/webroot/_ui/
+**/web/webroot/_ui/addons/
+**/web/webroot/cmscockpit/
+**/web/webroot/cockpit/
+**/web/webroot/productcockpit/
+**/web/webroot/WEB-INF/addons/
+**/web/webroot/WEB-INF/classes/
+**/web/webroot/WEB-INF/messages/addons/
+**/web/webroot/WEB-INF/tags/addons/
+**/web/webroot/WEB-INF/tld/addons/
+**/web/webroot/WEB-INF/views/addons/
+
+hybris/datahub/apache-tomcat-7.0.75/*
+
+hybris/bin/custom/suzano/suzanostorefront/resources/wro_addons.xml
+hybris/bin/custom/suzano/suzanoclubebackoffice/resources/backoffice/suzanoclubebackoffice_bof.jar
+
+**/suzanostorefront/web/webroot/_ui/responsive/theme-*/css
+**/suzanostorefront/web/webroot/_ui/responsive/common/js
+hybris/config/solr/instances/default/hsperfdata_*
+
+hybris/bin/custom/suzano/suzanohmc/hmc/bin/*
+hybris/bin/custom/suzano/suzanostorefront/web/webroot/WEB-INF/_ui-src/addons/*
+
+*-testclasses.xml
+
+datahub/apache-tomcat-7.0.85/webapps/datahub-webapp/
+datahub/apache-tomcat-7.0.85/logs/*
+datahub/apache-tomcat-7.0.85/temp/
+datahub/apache-tomcat-7.0.85/work/

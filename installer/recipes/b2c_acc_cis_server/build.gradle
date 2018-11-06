@@ -1,0 +1,202 @@
+apply plugin: 'installer-platform-plugin'
+apply plugin: 'installer-coreplus-plugin'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+ext {
+    config = {
+        localProperties {
+            properties(
+                    'commerceservices.default.desktop.ui.experience': 'responsive',
+                    'uiexperience.level.supported': 'DESKTOP',
+
+                    // Mock configuration for cis client mocks
+                    'cis.client.avs.mock': 'false',
+                    'cis.client.payment.mock': 'false',
+                    'cis.client.tax.mock': 'false',
+                    'cis.client.fraud.mock': 'false',
+                    'cis.client.geolocation.mock': 'false',
+                    'cis.client.shipping.mock': 'false',
+
+                    // Settings for email and HOP in accelerator
+                    'website.electronics.http': 'http://electronics.local:9001/yacceleratorstorefront',
+                    'website.electronics.https': 'https://electronics.local:9002/yacceleratorstorefront',
+                    'media.electronics.http': 'http://electronics.local:9001',
+                    'media.electronics.https': 'https://electronics.local:9002',
+
+                    // CIS url for mock payment
+                    'cis.rest.mock.payment.pspUrl': 'https://electronics.local:9002/acceleratorservices/sop-mock/process',
+                    'cis.rest.mock.payment.pspUrlLocation': 'https://electronics.local:9002/acceleratorservices/sop-mock/process',
+
+                    // Service topology configuration
+                    'serviceprovider.implementation': 'properties',
+                    // Debug configuration
+                    'ondemand.slf4jbridge.activated': 'true',
+                    'hybris.rest.client.logging.enabled': 'true',
+                    // Using higher memory settings (4G heap and 512 permgen) to prevent out of memory issues on tcserver
+                    'tomcat.generaloptions': '-Xmx4096M -XX:-UseLoopPredicate -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -ea -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dorg.tanukisoftware.wrapper.WrapperManager.mbean=true -Djava.endorsed.dirs="%CATALINA_HOME%/lib/endorsed" -Dcatalina.base=%CATALINA_BASE% -Dcatalina.home=%CATALINA_HOME% -Dfile.encoding=UTF-8 -Dlog4j.configuration=log4j_init_tomcat.properties -Djava.util.logging.config.file=jdk_logging.properties -Djava.io.tmpdir="${HYBRIS_TEMP_DIR}"',
+                    'standalone.javaoptions': '-Xmx2040M -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -ea -XX:-UseLoopPredicate',
+
+                    // Multi-Tenancy
+                    'kernel.defaultTenant': 'single',
+                    // CIS
+                    'cis.clientref': 'TEST-ID',
+                    // Security
+                    'hybris.security.api.authentication.enable': 'false',
+
+                    'avs.client.endpoint.uri': 'http://localhost:9055/avsService/avs/avsService',
+                    'shipping.client.endpoint.uri': 'http://localhost:9055/shippingService/shipping/shippingService',
+                    'geolocation.client.endpoint.uri': 'http://localhost:9055/geolocationService/geolocation/geolocationService',
+                    'tax.client.endpoint.uri': 'http://localhost:9055/taxService/tax/taxService',
+                    'fraud.client.endpoint.uri': 'http://localhost:9055/fraudService/fraud/fraudService',
+                    'payment.client.endpoint.uri': 'http://localhost:9055/paymentService/psp/paymentService'
+            )
+        }
+        extensions {
+
+            extName 'cisclient'
+            extName 'cisavs'
+            extName 'cispayment'
+            extName 'cistax'
+            extName 'corepluscommons'
+
+            extName 'admincockpit'
+            extName 'backoffice'
+            extName 'cockpit'
+            extName 'hmc'
+            extName 'mcc'
+            extName 'platformhmc'
+            extName 'addonsupport'
+
+            extName 'electronicsstore'
+            extName 'captchaaddon'
+
+            extName 'acceleratorcms'
+            extName 'acceleratorfacades'
+            extName 'acceleratorservices'
+            extName 'acceleratorstorefrontcommons'
+            extName 'basecommerce'
+            extName 'btg'
+            extName 'cms2'
+            extName 'cms2lib'
+            extName 'commercefacades'
+            extName 'commerceservices'
+            extName 'customerreview'
+            extName 'ldap'
+            extName 'payment'
+            extName 'promotions'
+            extName 'solrfacetsearch'
+            extName 'solrfacetsearchhmc'
+            extName 'ticketsystem'
+            extName 'voucher'
+            extName 'cmscockpit'
+
+            extName 'yacceleratorcore'
+            extName 'yacceleratorfacades'
+            extName 'yacceleratorfulfilmentprocess'
+            extName 'yacceleratorinitialdata'
+            extName 'yacceleratorstorefront'
+            extName 'yaddon'
+            extName 'ondemandcommon'
+            extName 'ondemandsampledata'
+            extName 'solrfacetsearchbackoffice'
+            extName 'solrserver'
+        }
+    }
+    workDir = './work'
+    corePlus = hybrisCoreplusFactory.createCoreplusTasks()
+    thePlatform = platform(config)
+    cisTomcatConfig = {
+        ports {
+            http 9055
+            ssl  9056
+        }
+        webApps {
+            webApp 'taxService.war', file(taxServiceWar)
+            webApp 'fraudService.war', file(fraudService)
+            webApp 'avsService.war', file(avsService)
+            webApp 'geolocationService.war', file(geolocationService)
+            webApp 'shippingService.war', file(shippingService)
+            webApp 'paymentService.war', file(paymentService)
+        }
+    }
+    CIS_CATALINA_OPTS = '-Xms4096m -Xmx4096m'
+    cisTomcat = tomcat.instance('cis')
+    cisArchetypeVersion = '5.6.0.0.18'
+    cisArchetypePath = 'com.hybris.cis.ext'
+    cisGeneratedProjectVersion = '1.0-SNAPSHOT'
+    taxServiceWar = installerHome+'/work/taxService/taxService-web/target/taxService-web-1.0-SNAPSHOT.war'
+    fraudService = installerHome+'/work/fraudService/fraudService-web/target/fraudService-web-1.0-SNAPSHOT.war'
+    avsService = installerHome+'/work/avsService/avsService-web/target/avsService-web-1.0-SNAPSHOT.war'
+    geolocationService = installerHome+'/work/geolocationService/geolocationService-web/target/geolocationService-web-1.0-SNAPSHOT.war'
+    shippingService = installerHome+'/work/shippingService/shippingService-web/target/shippingService-web-1.0-SNAPSHOT.war'
+    paymentService = installerHome+'/work/paymentService/paymentService-web/target/paymentService-web-1.0-SNAPSHOT.war'
+}
+
+task setup << {
+    apply plugin: 'installer-addon-plugin'
+
+    def thePlatform = platform(config)
+    thePlatform.setup()
+    generateCISWars ()
+    installCISProjects ()
+    cisTomcat.setup(cisTomcatConfig)
+}
+
+task initialize << {
+    thePlatform.build()
+    thePlatform.initialize()
+}
+
+task start << {
+    cisTomcat.start(CIS_CATALINA_OPTS)
+    thePlatform.startInDebug()
+}
+
+task generateCISWars << {
+    generateCISWars ()
+    installCISProjects ()
+}
+
+task deployCISWarsToCISServer << {
+    cisTomcat.setup(cisTomcatConfig)
+    cisTomcat.start(CIS_CATALINA_OPTS)
+}
+
+task stopCISServer << {
+    cisTomcat.stop()
+}
+
+task startCISServer << {
+    cisTomcat.start(CIS_CATALINA_OPTS)
+}
+
+def generateCISWars() {
+
+    corePlus.deleteDir('taxService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-tax-ext-archetype", cisArchetypeVersion, "org.training.cistax.myext", "taxService", cisGeneratedProjectVersion)
+    corePlus.deleteDir('fraudService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-fraud-ext-archetype", cisArchetypeVersion, "org.training.cisfraud.myext", "fraudService", cisGeneratedProjectVersion)
+    corePlus.deleteDir('avsService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-avs-ext-archetype", cisArchetypeVersion, "org.training.cisavs.myext", "avsService", cisGeneratedProjectVersion)
+    corePlus.deleteDir('geolocationService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-geolocation-ext-archetype", cisArchetypeVersion, "org.training.cisgeolocation.myext", "geolocationService", cisGeneratedProjectVersion)
+    corePlus.deleteDir('shippingService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-shipping-ext-archetype", cisArchetypeVersion, "org.training.cisshipping.myext", "shippingService", cisGeneratedProjectVersion)
+    corePlus.deleteDir('paymentService')
+    corePlus.archetypeGenerate(cisArchetypePath, "hybris-cis-core-payment-ext-archetype", cisArchetypeVersion, "org.training.cispayment.myext", "paymentService", cisGeneratedProjectVersion)
+}
+
+def installCISProjects() {
+    corePlus.cleanInstall("taxService")
+    corePlus.cleanInstall("fraudService")
+    corePlus.cleanInstall("avsService")
+    corePlus.cleanInstall("geolocationService")
+    corePlus.cleanInstall("shippingService")
+    corePlus.cleanInstall("paymentService")
+}

@@ -1,0 +1,238 @@
+def config = {
+    localProperties {
+        property 'googleApiKey', ''
+        property 'website.electronics.http', 'http://electronics.local:9001/yacceleratorstorefront'
+        property 'website.electronics.https', 'https://electronics.local:9002/yacceleratorstorefront'
+        property 'website.apparel-de.http', 'http://apparel-de.local:9001/yacceleratorstorefront'
+        property 'website.apparel-de.https', 'https://apparel-de.local:9002/yacceleratorstorefront'
+        property 'website.apparel-uk.http', 'http://apparel-uk.local:9001/yacceleratorstorefront'
+        property 'website.apparel-uk.https', 'https://apparel-uk.local:9002/yacceleratorstorefront'
+        property 'website.powertools.http', 'http://powertools.local:9001/yb2bacceleratorstorefront'
+        property 'website.powertools.https', 'https://powertools.local:9002/yb2bacceleratorstorefront'
+		property 'setup.siteoverride', 'true'
+
+        /* CPQ related Properties */
+
+        /* The type the DBMS you use for storing knowledge bases: MySQL, Microsoft SQL Server 2, Oracle */
+        property 'crm.system_type', 'MySQL'
+
+        /* DB host example localhost*/
+        property 'crm.database_hostname', 'localhost'
+
+        /* DB ID */
+        property 'crm.database', 'ssc'
+
+        /* DB port example 3306*/
+        property 'crm.database_port', '3306'
+
+        /* DB user*/
+        property 'crm.database_user', 'sscuser'
+
+        /* DB password*/
+        property 'crm.database_password', '1234'
+
+        /* DB ssc jndi usage enabled*/
+        property 'crm.ssc_jndi_usage', 'false'
+
+        /* jndi datasource*/
+        property 'crm.ssc_jndi_datasource', 'jdbc/SSC_IPC'
+    }
+
+    extensions {
+        scanPath '${HYBRIS_BIN_DIR}/ext-integration/sap'
+
+        extName 'mcc'
+        extName 'adaptivesearchsolr'
+        extName 'adaptivesearchbackoffice'
+        extName 'adaptivesearchsamplesaddon'
+        extName 'adaptivesearchwebservices'
+        extName 'b2bcommercebackoffice'
+        extName 'solrfacetsearchbackoffice'
+
+        extName 'yacceleratorcockpits'
+        extName 'yacceleratorinitialdata'
+        extName 'yacceleratorfulfilmentprocess'
+        extName 'yacceleratorstorefront'
+        extName 'ycommercewebservices'
+        extName 'ycommercewebservicestest'
+
+        extName 'apparelstore'
+        extName 'electronicsstore'
+        extName 'powertoolsstore'
+        extName 'solrserver'
+
+        extName 'acceleratorwebservicesaddon'
+        extName 'b2bacceleratoraddon'
+        extName 'commerceorgaddon'
+        extName 'commerceorgsamplesaddon'
+        extName 'orderselfserviceaddon'
+
+        extName 'assistedservicestorefront'
+		  extName 'assistedservicewebservices'
+        extName 'customerticketingaddon'
+        extName 'customersupportbackoffice'
+
+        extName 'rulebuilderbackoffice'
+        extName 'couponbackoffice'
+        extName 'droolsruleengineservices'
+        extName 'couponfacades'
+        extName 'promotionenginesamplesaddon'
+
+        extName 'textfieldconfiguratortemplatebackoffice'
+        extName 'textfieldconfiguratortemplateaddon'
+
+        extName 'assistedserviceatddtests'
+        extName 'promotionengineatddtests'
+        extName 'textfieldconfiguratortemplateatddtests'
+
+        extName 'cmswebservices'
+        extName 'smarteditwebservices'
+        extName 'permissionswebservices'
+        extName 'smarteditaddon'
+        extName 'cmssmartedit'
+		  extName 'cmsbackoffice'
+        extName 'previewwebservices'
+        extName 'cmssmarteditwebservices'
+
+	     extName 'previewpersonalizationweb'
+		  extName 'personalizationcmsweb'
+		  extName 'personalizationsmartedit'
+        extName 'personalizationpromotionssmartedit'
+		  extName 'personalizationsampledataaddon'
+		  extName 'personalizationpromotions'
+		  extName 'personalizationpromotionsweb'
+		  extName 'personalizationservicesbackoffice'
+		  extName 'personalizationpromotionsbackoffice'
+		  extName 'personalizationcmsbackoffice'
+		  extName 'personalizationsearchbackoffice'
+		  extName 'personalizationsearchsmartedit'
+		  extName 'personalizationsearchweb'
+		  extName 'personalizationsearchsamplesaddon'
+
+		  extName 'pcmbackofficesamplesaddon'
+
+		  /* CPQ related extensions */
+		  extName 'sapproductconfigb2b'
+		  extName 'sapproductconfigbackoffice'
+		  extName 'sapproductconfigbackofficessc'
+		  extName 'sapproductconfigb2bservices'
+		  /* 'sapproductconfigruntimemock' contains a standalone engine for demo/test purpose */
+		  extName 'sapproductconfigruntimemock'
+		  /* 'sapproductconfigruntimessc' contains the full engine for productive use*/
+		  extName 'sapproductconfigruntimessc'
+		  extName 'sapproductconfigrules'
+		  extName 'sapproductconfigrulesbackoffice'
+		  extName 'ysapproductconfigaddon'
+		  extName 'sapproductconfigb2baddon'
+    }
+}
+
+def checkForSSCLib() {
+    def defaultSSCLibDir = file("${project.rootDir}/../hybris/bin/ext-integration/sap/productconfig/sapproductconfigruntimessc/lib")
+    def binCustomDir = file("${project.rootDir}/../hybris/bin/custom")
+    def patternSSCLib = ~/com\.sap\.custdev\.projects\.fbs\.slc\.engine-/
+    def patternSSCLibDir = ~/[\/|\\]sapproductconfigruntimessc[\/|\\]lib|sap\.hybris\.productconfig\.runtime\.ssc[\/|\\]lib/
+    def sscLibFound = false
+
+    def findFilenameClosure = {
+        if (patternSSCLib.matcher(it.name).find()) {
+            println "\t Found: ${it.name} (size ${it.size()})"
+            sscLibFound = true
+        }
+    }
+
+    def findSSCDirClosure = {
+        if (patternSSCLibDir.matcher(it.path).find()) {
+            it.eachFileRecurse(findFilenameClosure)
+        }
+    }
+
+    println "\nChecking for SSC engine library..."
+    if (defaultSSCLibDir.exists()) {
+        defaultSSCLibDir.eachFileRecurse(findFilenameClosure)
+    } else {
+        if (binCustomDir.exists()) {
+            binCustomDir.eachDirRecurse(findSSCDirClosure)
+        }
+    }
+
+    if (!sscLibFound) {
+        println("FAILED: SSC engine library not found!")
+        throw new InvalidUserDataException("Please download SAP CPQ Configuration Runtime (SSC libraries) from the SAP Software Download Center at http://support.sap.com/swdc under 'Support Packages and Patches'. In the alphabetical list of products, choose 'C' and then 'SAP CPQ PRODUCT CONFIG' -> 'SAP CPQ PRODUCT CONFIG [current release]'. Install it according to SAP CPQ installation guide.")
+    } else {
+        println("SUCCESS: SSC engine library found.")
+    }
+}
+
+def addExtgen = {
+	println "Adding empty extgen.properties for yb2bacceleratorstorefront."
+	def customFolder = new File("${project.rootDir}/../hybris/bin/custom");
+	def targetFile = new File("${project.rootDir}/../hybris/bin/custom/yb2bacceleratorstorefront/extgen.properties")
+	if (customFolder.exists() && !targetFile.exists()) {
+		targetFile.write "# Empty extgen for compliance with ExtensionRequirementsTest"
+		println "Finished adding extgen.properties for yb2bacceleratorstorefront."
+	} else {
+		println "Unable to add extgen.properties for yb2bacceleratorstorefront."
+	}
+}
+
+task setup << {
+    apply plugin: 'installer-platform-plugin'
+    apply plugin: 'installer-addon2-plugin'
+    checkForSSCLib()
+    def pl = platform(config)
+    pl.setup()
+
+    pl.executeAntTarget 'extgen -Dhybris.target=extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2bacceleratorstorefront -Dinput.package=de.hybris.platform.yb2bacceleratorstorefront'
+
+    pl.extensions {
+        extName 'yb2bacceleratorstorefront'
+    }
+
+    pl.addons {
+        forStoreFronts('yacceleratorstorefront,yb2bacceleratorstorefront') {
+            names 'commerceorgsamplesaddon', 'assistedservicestorefront', 'customerticketingaddon', 'promotionenginesamplesaddon', 'textfieldconfiguratortemplateaddon',
+                    'orderselfserviceaddon', 'smarteditaddon', 'ysapproductconfigaddon', 'adaptivesearchsamplesaddon', 'pcmbackofficesamplesaddon', 'personalizationsearchsamplesaddon'
+            template 'yacceleratorstorefront'
+        }
+    }
+
+    pl.addons {
+        forStoreFronts('yb2bacceleratorstorefront') {
+            names 'b2bacceleratoraddon', 'sapproductconfigb2baddon', 'commerceorgaddon'
+            template 'yacceleratorstorefront'
+        }
+    }
+
+    pl.addons {
+        forStoreFronts('ycommercewebservices') {
+            names 'acceleratorwebservicesaddon'
+            template 'ycommercewebservices'
+        }
+    }
+
+	 addExtgen()
+	 pl.setup()   	
+}
+
+task buildWithConfiguration {
+    doLast {
+        apply plugin: 'installer-platform-plugin'
+        def pl = platform(config)
+        pl.build()
+    }
+}
+
+task initialize(dependsOn: buildWithConfiguration) {
+    apply plugin: 'installer-platform-plugin'
+    doLast {
+        def pl = platform(config)
+        pl.initialize()
+    }
+}
+
+task start << {
+    apply plugin: 'installer-platform-plugin'
+    def pl = platform(config)
+    pl.start()
+}

@@ -1,0 +1,8 @@
+FROM karm/mod_cluster-master-dockerhub
+
+ENV MODCLUSTER_ADVERTISE=Off
+ENV HTTP_PORT=${httpPort} HTTPS_PORT=${httpsPort} SERVER_NAME=${serverName} HTTPD_LOG_LEVEL=${logLevel}
+ENV SSL_CONF_DIR=${sslConfDir}
+
+COPY my-httpd.conf ${HTTPD_MC_BUILD_DIR}/conf/httpd.conf
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <mirrors>
+        <mirror>
+            <id>MirrorEverything</id>
+            <mirrorOf>*</mirrorOf>
+            <name>disconnect-me</name>
+          	<url></url> <!-- fully qualified path to the repository(hybris-dependency folder located in hybris-commerce-suite-6.X.0-repository.zip) Ex:  file:///development/Commercesuites/hybris-commerce-suite-6.X.0-repository/hybris-dependencies -->
+        </mirror>
+    </mirrors>
+ 
+</settings>

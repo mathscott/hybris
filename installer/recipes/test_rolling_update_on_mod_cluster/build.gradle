@@ -1,0 +1,127 @@
+apply plugin: 'installer-platform-plugin'
+apply plugin: 'installer-platform-containerization-plugin'
+apply plugin: 'java'
+
+def pl = platform {
+    localProperties {
+        property 'persistence.legacy.mode', 'false'
+        property 'installed.tenants', ''
+        property 'backoffice.cockpit.ytestid.enabled', 'true'
+    }
+
+    dbSetup {
+        dbType 'hsqldb'
+        dbUrl 'jdbc:hsqldb:hsql://hsql:9090/hybris;hsqldb.tx=MVCC'
+        dbUser 'hybris'
+        dbPassword 'hybris'
+    }
+
+    clusterSettings {
+        enableAutodiscovery()
+        udpMulticast()
+    }
+
+    extensions {
+	    extName 'platformbackoffice'
+	}
+}
+
+def pl2 = platform {
+    localProperties {
+        property 'persistence.legacy.mode', 'false'
+        property 'installed.tenants', ''
+        property 'backoffice.cockpit.ytestid.enabled', 'true'
+    }
+
+    dbSetup {
+        dbType 'hsqldb'
+        dbUrl 'jdbc:hsqldb:hsql://hsql:9090/hybris;hsqldb.tx=MVCC'
+        dbUser 'hybris'
+        dbPassword 'hybris'
+    }
+
+    clusterSettings {
+        enableAutodiscovery()
+        udpMulticast()
+    }
+
+    extensions {
+        extName 'platformbackoffice'
+        extName 'y2ysyncbackoffice'
+	}
+}
+
+def dpl = deployment('rollingUpdateTest') {
+
+    modClusterApache("${project.projectDir}/resources/modclusterlb")
+
+    hsqlImage('hsql') {
+        properties {
+            property 'port', '9090'
+        }
+    }
+
+    platformImage('platformbackoffice') {
+        basedOn pl
+
+        customTomcatFiles "${project.projectDir}/resources/mod-cluster-binaries"
+
+        aspect('platform') {
+            enabledWebApps 'hac'
+            enabledWebApps 'backoffice'
+
+            templatesProperties {
+                property 'httpsConnectorEnabled', 'false'
+                property 'serverXmlServerHook', '''<Listener className="org.jboss.modcluster.container.catalina.standalone.ModClusterListener" advertise="false" stickySession="true" stickySessionForce="false" stickySessionRemove="true" proxyList="${ENV::MOD_CLUSTER_PROXY_LIST}"/>'''
+            }
+        }
+
+        adminAspect()
+    }
+
+    platformImage('y2ysyncbackoffice') {
+        basedOn pl2
+
+        customTomcatFiles "${project.projectDir}/resources/mod-cluster-binaries"
+
+        aspect('platformUpdate') {
+            enabledWebApps 'hac'
+            enabledWebApps 'backoffice'
+
+            localProperties {
+                property 'db.type.system.name', 'new_type_system'
+            }
+
+            templatesProperties {
+                property 'httpsConnectorEnabled', 'false'
+                property 'serverXmlServerHook', '''<Listener className="org.jboss.modcluster.container.catalina.standalone.ModClusterListener" advertise="false" stickySession="true" stickySessionForce="false" stickySessionRemove="true" proxyList="${ENV::MOD_CLUSTER_PROXY_LIST}"/>'''
+            }
+        }
+
+        adminAspect()
+    }
+}
+
+task createImagesStructure {
+
+    doLast {
+        dpl.createImagesStructure()
+    }
+}
+
+task buildImages(dependsOn: createImagesStructure) {
+    doLast {
+        dpl.buildImages()
+    }
+}
+
+dependencies() {
+    compile fileTree(dir: "${project.installerHome}/orchestrationLibs/", include: ['*.jar'])
+}
+
+task rollingUpdateTest(type: Test) {
+    outputs.upToDateWhen { false }
+    filter {
+        includeTestsMatching 'RollingUpdateTest'
+    }
+}
