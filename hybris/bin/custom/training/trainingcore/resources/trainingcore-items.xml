@@ -37,7 +37,24 @@
     <itemtypes>
 
         <!-- Add your item definitions here -->
+        <itemtype code="ProdutoTeste1"
+                  extends="GenericItem"
+                  autocreate="true"
+                  generate="true">>
+            <deployment table="ProdutoTeste1" typecode="10300"/>
+        </itemtype>
 
+        <itemtype code="ProdutoTeste2"
+                  autocreate="true"
+                  generate="true"><deployment table="ProdutoTeste2" typecode="10301"/>>
+            <attributes>
+                <attribute qualifier="code" type="java.lang.String">
+                    <description>Produto de Teste numero 2</description>
+                    <modifiers optional="false" unique="true"></modifiers>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
 
         <!-- TypeGroups are for structure of this file only -->
 
