@@ -49,7 +49,7 @@
                   generate="true"><deployment table="ProdutoTeste2" typecode="10301"/>>
             <attributes>
                 <attribute qualifier="code" type="java.lang.String">
-                    <description>Produto de Teste numero 2</description>
+                    <description>Código único</description>
                     <modifiers optional="false" unique="true"></modifiers>
                     <persistence type="property"/>
                 </attribute>
