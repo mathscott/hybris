@@ -13,8 +13,20 @@
 
 	<!-- extensao1 UI configuration should be provided here -->
 
-	<!--<context component="component-code" module="extensao1">-->
-		<!--Please check documentation for code snippets for specific components-->
-	<!--</context>-->
+	<context component="explorer-tree" merge-by="module">
+		 <n:explorer-tree xmlns:n="http://www.hybris.com/cockpitng/config/explorertree">
+			 <n:navigation-node id="ExtensaoTesteBackOffice">
+			 <n:type-node id="Teste" code="Teste" />
+			 </n:navigation-node>
+		 </n:explorer-tree>
+	</context>
+	<context type="Teste" component="listview">
+		 <list:list-view xmlns:list="http://www.hybris.com/cockpitng/component/listView">
+			<list:column qualifier="code"/>
+			<list:column qualifier="name"/>
+			<list:column qualifier="duration"/>
+			<list:column qualifier="amount"/>
+		 	</list:list-view>
+	</context>
 
 </config>
