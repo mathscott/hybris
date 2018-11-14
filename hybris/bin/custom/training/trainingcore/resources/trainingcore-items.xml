@@ -37,6 +37,21 @@
     <itemtypes>
 
         <!-- Add your item definitions here -->
+        <itemtype code="Ticket" autocreate="true" generate="true">
+            <deployment table="Ticket" typecode="10303"/>
+            <attributes>
+                <attribute qualifier="AtributoBoolean" type="java.lang.Boolean">
+                    <persistence type="property"></persistence>
+                </attribute>
+                <attribute qualifier="AtributoString" type="java.lang.String">
+                    <persistence type="property"></persistence>
+                </attribute>
+                <attribute qualifier="AtributoData" type="java.util.Date">
+                    <persistence type="property"></persistence>
+                </attribute>
+            </attributes>
+        </itemtype>
+
         <itemtype code="ProdutoTeste1"
                   extends="GenericItem"
                   autocreate="true"
